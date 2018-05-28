@@ -1,14 +1,9 @@
 /*
  * Copyright (c) 2018 Fabio Comuni <fabrix.xm@gmail.com>
- * 
- * This library is released under BSD license
+ *
+ * This library is released under BSD2 license
  *
  * https://github.com/commonmark/cmark
- * $ zcat /usr/share/man/man3/cmark.3.gz | roff2html > cmark.hmtl
- *
- * https://wiki.gnome.org/Projects/Vala/LegacyBindings
- * https://wiki.gnome.org/Projects/Vala/FAQ
- * https://wiki.gnome.org/Projects/Vala/ReferenceHandling#Unowned_References
  */
 
 [CCode (cprefix = "cmark_", cheader_filename = "cmark.h")]
@@ -23,7 +18,7 @@ namespace CMark {
     [Flags]
     public enum OPT {
         DEFAULT,
-        
+
         /**
         * Include a ``data−sourcepos`` attribute on all block elements.
         */
@@ -33,9 +28,9 @@ namespace CMark {
         */
         HARDBREAKS,
         /**
-        * Suppress raw HTML and unsafe links 
+        * Suppress raw HTML and unsafe links
         *
-        * Suppress (javascript:, vbscript:, file:, and data:, 
+        * Suppress (javascript:, vbscript:, file:, and data:,
         * except for image/png, image/gif, image/jpeg, or image/webp mime types).
         * Raw HTML is replaced by a placeholder HTML comment.
         * Unsafe links are replaced by empty strings.
@@ -45,7 +40,7 @@ namespace CMark {
         * Render ``softbreak`` elements as spaces.
         */
         NOBREAKS,
-        
+
         /**
         * Legacy option (no effect).
         */
@@ -96,9 +91,9 @@ namespace CMark {
       FIRST_INLINE, // = TEXT,
       LAST_INLINE // = IMAGE,
     }
-    
 
-    [CCode (cname = "cmark_list_type", has_type_id = false)]    
+
+    [CCode (cname = "cmark_list_type", has_type_id = false)]
     public enum LIST_TYPE {
         [CCode (cname="CMARK_NO_LIST")]
         NO_LIST,
@@ -108,7 +103,7 @@ namespace CMark {
         ORDERED
     }
 
-    [CCode (cname = "cmark_delim_type", has_type_id = false)]    
+    [CCode (cname = "cmark_delim_type", has_type_id = false)]
     public enum DELIM_TYPE {
         [CCode (cname="CMARK_NO_DELIM")]
         NO_DELIM,
@@ -116,18 +111,18 @@ namespace CMark {
         PERIOD,
         [CCode (cname="CMARK_PAREN_DELIM")]
         PAREN
-    }    
+    }
 
-    [CCode (cname = "cmark_event_type", cprefix = "CMARK_EVENT_", has_type_id = false)]    
+    [CCode (cname = "cmark_event_type", cprefix = "CMARK_EVENT_", has_type_id = false)]
     public enum EVENT {
         NONE,
         DONE,
         ENTER,
         EXIT
     }
-    
+
     /**
-    * The library version as integer for runtime checks. 
+    * The library version as integer for runtime checks.
     *
     *
     *  * Bits 16−23 contain the major version.
@@ -137,23 +132,23 @@ namespace CMark {
     * In hexadecimal format, the number 0x010203 represents version 1.2.3.
     */
     public int version();
-    
+
     /**
     * The library version string for runtime checks.
     */
     public unowned string version_string();
-    
+
     /**
     * Convert text from CommonMark Markdown to HTML.
     *
-    * Convert text (assumed to be a UTF−8 encoded string) from CommonMark Markdown to HTML, 
-    * returning a null−terminated, UTF−8−encoded string. 
+    * Convert text (assumed to be a UTF−8 encoded string) from CommonMark Markdown to HTML,
+    * returning a null−terminated, UTF−8−encoded string.
     * It is the caller’s responsibility to free the returned buffer.
     */
     [CCode (cname="cmark_markdown_to_html")]
     public unowned string to_html([CCode (type="const char*", array_length_type = "size_t")] uint8[] text, OPT options);
-    
-    
+
+
     /**
     *
     */
@@ -166,7 +161,7 @@ namespace CMark {
         */
         [CCode(cname = "cmark_parse_document")]
         public static Node? parse_document([CCode (type="const char*", array_length_type = "size_t")] uint8[] text, OPT options);
-        
+
         /**
         * Parse a CommonMark document in file.
         *
@@ -174,7 +169,7 @@ namespace CMark {
         */
         [CCode(cname = "cmark_parse_file")]
         public static Node? parse_file(GLib.FileStream f, OPT options);
-        
+
         /**
         * Creates a new node of type ``type``.
         *
@@ -182,12 +177,12 @@ namespace CMark {
         */
         [CCode(cname = "cmark_node_new")]
         public Node(NODE_TYPE type);
-        
+
         /**
         * Frees the memory allocated for a node and any children.
         */
         public void free();
-        
+
         // Tree Traversal
         /**
         * Returns the next node in the sequence after node, or NULL if there is none
@@ -209,7 +204,7 @@ namespace CMark {
         * Returns the last child of node, or NULL if node has no children.
         */
         public unowned Node? last_child();
-        
+
         // Accessors
         /**
         * Returns the user data of node.
@@ -395,7 +390,7 @@ namespace CMark {
 
         // Rendering
         /**
-        * Render a node tree as XML. 
+        * Render a node tree as XML.
         *
         * It is the caller’s responsibility to free the returned buffer.
         */
@@ -430,25 +425,25 @@ namespace CMark {
         */
         [CCode (cname="cmark_render_latex")]
         public unowned string render_latex(OPT options, int width);
-        
+
 
         // TODO : more methods
     }
-    
+
     /**
     * Iterator
     *
-    * An iterator will walk through a tree of nodes, starting from a root node, 
-    * returning one node at a time, together with information about whether the 
-    * node is being entered or exited. 
-    * 
-    * The iterator will first descend to a child node, if there is one. 
-    * When there is no child, the iterator will go to the next sibling. 
-    * When there is no next sibling, the iterator will return to the parent 
-    * (but with an event type of EVENT.EXIT). 
+    * An iterator will walk through a tree of nodes, starting from a root node,
+    * returning one node at a time, together with information about whether the
+    * node is being entered or exited.
+    *
+    * The iterator will first descend to a child node, if there is one.
+    * When there is no child, the iterator will go to the next sibling.
+    * When there is no next sibling, the iterator will return to the parent
+    * (but with an event type of EVENT.EXIT).
     * The iterator will return EVENT.DONE when it reaches the root node again.
-    * One natural application is an HTML renderer, where an ENTER event outputs 
-    * an open tag and an EXIT event outputs a close tag. 
+    * One natural application is an HTML renderer, where an ENTER event outputs
+    * an open tag and an EXIT event outputs a close tag.
     * An iterator might also be used to transform an AST in some systematic way,
     * for example, turning all level−3 headings into regular paragraphs.
     *
@@ -490,14 +485,14 @@ namespace CMark {
         * Frees the memory allocated for an iterator.
         */
         public void free();
-        
+
         /**
         * Advances to the next node.
         *
         * Returns the event type (EVENT.ENTER, EVENT.EXIT or EVENT.DONE).
         */
         public EVENT next();
-        
+
         /**
         *.Returns the current node.
         */
@@ -510,7 +505,7 @@ namespace CMark {
         * Returns the root node.
         */
         public unowned Node? get_root();
-        
+
         /**
         * Resets the iterator.
         *
@@ -519,9 +514,9 @@ namespace CMark {
         */
         public void reset(Node current, EVENT event_type);
     }
-    
-    
-    
+
+
+
     /**
     * Parsing
     *
@@ -549,12 +544,12 @@ namespace CMark {
         * Creates a new parser object.
         */
         public Parser(OPT options);
-        
+
         /**
         * Frees memory allocated for a parser object.
         */
         void cmark_parser_free();
-        
+
         /**
         * Feeds a string of length ``len`` to parser.
         */
@@ -566,4 +561,3 @@ namespace CMark {
 
     }
 }
-
